@@ -76,17 +76,11 @@ body:has([id="list"]:checked) .grid {
   }
 }
 .icon-label {
+  cursor: pointer;
   padding: .5rem;
   border-bottom: 3px solid transparent;
-  position: relative;
   input {
-    position: absolute;
-    inset: 0;
-    border-radius: 0;
-    border: 0;
-    padding: 0;
-    appearance: none;
-    cursor: pointer;
+    display: none;
   }
   svg {
     width: 24px;
@@ -219,4 +213,7 @@ footer {
 }
 dialog::backdrop {
   pointer-events: none;
+}
+picture {
+  flex-shrink: 0;
 }
