@@ -1,4 +1,8 @@
+const { eleventyImageTransformPlugin } = require("@11ty/eleventy-img");
+
 module.exports = function(eleventyConfig) {
+
+  eleventyConfig.addPlugin(eleventyImageTransformPlugin);
 
   eleventyConfig.addPassthroughCopy("_src/css");
   eleventyConfig.addPassthroughCopy("_src/js");
