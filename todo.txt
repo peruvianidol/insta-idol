@@ -31,3 +31,4 @@
 - Replace Instagram media with original quality media?
 - Make a SVG sprite for icons
 - Add social sharing metadata
+- Add favicon

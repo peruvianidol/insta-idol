@@ -19,7 +19,9 @@ JS
 * Use localstorage to persist list/grid preference between page loads
 * Close dialog when clicking on backdrop
 * Stop video and reset to beginning when closing dialog
+* Stop propagation on opening modals so they don't immediately close if click falls outside the dialog area
 
 MISTAKES
 * Had to manually add videos from non-posts folders
 * Posts with multiple media had no title, had to add manually
+* Got stumped when certain dialogs weren't working; close dialog script was the culprit
