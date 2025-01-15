@@ -30,3 +30,4 @@
 ✅ Stop video from playing when closing modal
 - Replace Instagram media with original quality media?
 - Make a SVG sprite for icons
+- Add social sharing metadata

@@ -117,7 +117,6 @@ strong {
   cursor: pointer;
   display: block;
   outline: none;
-  position: relative;
 }
 ::backdrop {
   background-color: #000;

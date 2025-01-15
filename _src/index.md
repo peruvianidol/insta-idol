@@ -24,30 +24,29 @@ eleventyComputed:
             {%- endif -%}
           </button>
         {%- endfor -%}
-        {% if post.media.length > 1 %}
+        {%- if post.media.length > 1 -%}
           <div class="icon-multiple">
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M19.857 1.93v16.997a.93.93 0 0 1-.93.93H1.93a.93.93 0 0 1-.93-.93V1.93A.93.93 0 0 1 1.93 1h16.997a.93.93 0 0 1 .93.93Zm1.048 2.212h1.165a.93.93 0 0 1 .93.931V22.07a.93.93 0 0 1-.93.93H5.073a.93.93 0 0 1-.93-.93v-1.166h15.832a.93.93 0 0 0 .93-.93V4.143Z"/></svg>
           </div>
-        {% endif %}
-        <dialog id="{{ post.creation_timestamp }}">
-          <div>
-            {%- for url in post.media -%}
-              {%- if url.slice(-3) === "mp4" -%}
-                <video src="{{ url | optimize('/q_auto/f_auto') }}" controls loop>
-              {%- else -%}
-                <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="">
-              {% endif %}
-            {%- endfor -%}
-          </div>
-        </dialog>
+        {%- endif -%}
       <figcaption>
         <p><strong>peruviandiol</strong> {{ post.title }}</p>
         <time datetime="{{ post.creation_timestamp }}">{{ post.creation_timestamp | postDate }}</time>
       </figcaption>
     </figure>
+    <dialog id="{{ post.creation_timestamp }}">
+      <div>
+        {%- for url in post.media -%}
+          {%- if url.slice(-3) === "mp4" -%}
+            <video src="{{ url | optimize('/q_auto/f_auto') }}" controls loop>
+          {%- else -%}
+            <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="">
+          {% endif %}
+        {%- endfor -%}
+      </div>
+    </dialog>
   {%- endfor -%}
 </div>
-
 <nav class="pagination">
   <ol>
     <li>{% if pagination.href.previous %}<a href="{{ pagination.href.previous }}">Newer</a>{% endif %}</li>
@@ -55,7 +54,6 @@ eleventyComputed:
     <li>{% if pagination.href.next %}<a href="{{ pagination.href.next }}">Older</a>{% endif %}</li>
   </ol>
 </nav>
-
 <footer>
   <p>Made with spite by <a href="https://mikeaparicio.com">Mike Aparicio</a> because fuck Zuck.</p>
 </footer>
