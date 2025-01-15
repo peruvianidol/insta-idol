@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>{{title}}</title>
+</head>
+<body>
+  <header class="space-between">
+    <h1><a href="/">Insta-Idol</a></h1>
+    <nav class="flex">
+      <label for="grid" class="icon-label">
+        <input type="radio" name="view" id="grid" checked>
+        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M7.415 9.384v5.231c0 .351-.284.635-.634.635H1.548a.635.635 0 0 1-.634-.635v-5.23c0-.35.285-.635.634-.635h5.233c.35 0 .634.285.634.634Z"/><path d="M15.25 9.384v5.231c0 .351-.284.635-.634.635H9.384a.635.635 0 0 1-.634-.635v-5.23c0-.35.284-.635.634-.635h5.232c.35 0 .634.285.634.634Z"/><path d="M23.085 9.384v5.231c0 .351-.284.635-.634.635H17.22a.635.635 0 0 1-.634-.635v-5.23c0-.35.285-.635.634-.635h5.232c.35 0 .634.285.634.634Z"/><path d="M7.415 17.093v5.231c0 .35-.284.635-.634.635H1.548a.635.635 0 0 1-.634-.635v-5.23c0-.35.285-.636.634-.636h5.233c.35 0 .634.285.634.635Z"/><path d="M15.25 17.093v5.231c0 .35-.284.635-.634.635H9.384a.635.635 0 0 1-.634-.635v-5.23c0-.35.284-.636.634-.636h5.232c.35 0 .634.285.634.635Z"/><path d="M23.085 17.093v5.231c0 .35-.284.635-.634.635H17.22a.635.635 0 0 1-.634-.635v-5.23c0-.35.285-.636.634-.636h5.232c.35 0 .634.285.634.635Z"/><path d="M7.415 1.676v5.23c0 .352-.284.636-.634.636H1.548a.635.635 0 0 1-.634-.635V1.676c0-.35.285-.635.634-.635h5.233c.35 0 .634.285.634.635Z"/><path d="M15.25 1.676v5.23c0 .352-.284.636-.634.636H9.384a.635.635 0 0 1-.634-.635V1.676c0-.35.284-.635.634-.635h5.232c.35 0 .634.285.634.635Z"/><path d="M23.085 1.676v5.23c0 .352-.284.636-.634.636H17.22a.635.635 0 0 1-.634-.635V1.676c0-.35.285-.635.634-.635h5.232c.35 0 .634.285.634.635Z"/></svg>
+      </label>
+      <label for="list" class="icon-label">
+        <input type="radio" name="view" id="list">
+        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M23 1.891v20.3a.85.85 0 0 1-.85.851H1.85a.85.85 0 0 1-.852-.851v-20.3c0-.468.382-.851.851-.851h20.3c.47 0 .851.383.851.851Z"/></svg>
+      </label>
+    </nav>
+  </header>
+
+  {{ content | safe }}
+
+  <script src="/js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+SETUP
+* Used ChatGPT to generate setup script(s):
+* Compile igtv, posts, reels, stories in your_instagram_activity/content/
+* Group media by creation_timestamp for posts with multiple images/videos
+* Sort by creation_timestamp in descending order
+* Get title, creation_timestamp from post, when post has multiple media, else from media if only one exists
+* Optional: Get latitude, longitude from media exif_data
+* Upon uploading to Cloudinary, create _data/posts.json with simplified JSON data
+* Note: Some video files may not include .mp4 extension
+* Note: Titles with emoji/accents may not render correctly -- need to add emoji back in manually.
+
+ELEVENTY
+* Add eleventy filters for limiting posts, date conversion, adding optimization parameters to Cloudinary images
+* Paginate through _data/posts.json
+* Show the first image in a post, place inside button that triggers full size media in a dialog
+* Show icons when multiple media present or media is video
+
+JS
+* Use localstorage to persist list/grid preference between page loads
+* Close dialog when clicking on backdrop
+* Stop video and reset to beginning when closing dialog
+
+MISTAKES
+* Had to manually add videos from non-posts folders
+* Posts with multiple media had no title, had to add manually

@@ -1,0 +1,32 @@
+- JSON file
+  * image URL
+  * filename
+  * description
+  * alt text
+  * created date
+  * location data (lat/long)
+  * location name
+  * tags
+- Location Data
+ * Get degrees, minutes, seconds (DMS) from exif data? "gps_position"
+ * Convert DMS to decimal degrees (DD)
+ * Link to Google Maps location
+✅ Add existing Instagram data to JSON
+- Upload form sends images to Cloudinary and updates JSON file
+- Send build hook to Netlify on upload
+- Use 11ty pagination to create individual image pages?
+- "share" link to individual posts
+✅ Lazy load images OR Dogs of Dev-style pagination
+✅ Use dialog to show full-size image when clicking on an image
+- Dark mode toggle
+✅ Add Cloudinary image optimization, separate images for thumbnail/full-size
+- Subset logo font?
+✅ Support multi-image posts
+✅ Support/test video
+✅ Persist grid/list view between pages 
+- Add RSS
+- Make a new video icon
+- Improve pagination beyond prev/next
+✅ Stop video from playing when closing modal
+- Replace Instagram media with original quality media?
+- Make a SVG sprite for icons
