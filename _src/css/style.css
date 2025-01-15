@@ -211,3 +211,6 @@ footer {
     color: inherit;
   }
 }
+dialog::backdrop {
+  pointer-events: none;
+}

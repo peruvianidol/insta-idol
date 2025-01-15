@@ -13,7 +13,7 @@ eleventyComputed:
   {%- for post in posts | limit(12) -%}
     <figure>
         {%- for url in post.media | limit(1) -%}
-          <button class="dialog-button" onclick="document.getElementById('{{ post.creation_timestamp }}').showModal()">
+          <button class="dialog-button" data-dialog-id="{{ post.creation_timestamp }}">
             {%- if url.slice(-3) === "mp4" -%}
               <div class="video-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M23 7.061v9.878c0 .689-.56 1.249-1.248 1.249H2.248A1.25 1.25 0 0 1 1 16.938V7.062c0-.689.56-1.249 1.248-1.249h19.504c.689 0 1.248.56 1.248 1.25Zm-6.823 4.78-7.38-4.03a.2.2 0 0 0-.198.003.199.199 0 0 0-.1.172v8.029a.2.2 0 0 0 .295.176l7.383-3.998a.2.2 0 0 0 0-.351Z"/></svg>

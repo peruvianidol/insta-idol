@@ -48,3 +48,10 @@ document.querySelectorAll('dialog').forEach((dialog) => {
     stopVideosInDialog(dialog);
   });
 });
+
+document.querySelectorAll('.dialog-button').forEach((button) => {
+  button.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById(button.dataset.dialogId).showModal();
+  });
+});
