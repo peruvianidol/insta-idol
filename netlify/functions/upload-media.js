@@ -133,6 +133,8 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error("🔥 Full error details:", error.stack || error);
+    console.error("📜 Full error response:", error.response ? await error.response.text() : "No response data");
+    
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || "Unknown server error" }),
