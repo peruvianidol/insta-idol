@@ -17,4 +17,4 @@ layout: base.njk
 
 <div id="uploadStatus"></div>
 
-<script src="/scripts.js"></script>
+<script src="/js/scripts.js"></script>
