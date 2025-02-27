@@ -1,4 +1,5 @@
 const fs = require("fs");
+require("dotenv").config();
 
 const username = process.env.BASIC_AUTH_USERNAME;
 const password = process.env.BASIC_AUTH_PASSWORD;
