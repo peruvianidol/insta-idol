@@ -5,7 +5,6 @@ const path = require("path");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const { exec } = require("child_process");
 
-const BUILD_HOOK_URL = process.env.NETLIFY_BUILD_HOOK;
 const GIT_COMMIT_MESSAGE = "Auto-update posts.json with new upload";
 
 // Configure Cloudinary
@@ -110,31 +109,42 @@ exports.handler = async (event) => {
 
     // 🚀 **Commit & Push the Updated `posts.json` to GitHub**
     console.log("🔄 Committing and pushing posts.json to GitHub...");
-    exec(
-      `git add ${POSTS_FILE_PATH} && git commit -m "${GIT_COMMIT_MESSAGE}" && git push origin main`,
-      async (err, stdout, stderr) => {
-        if (err) {
-          console.error("❌ Git commit/push failed:", stderr);
-          return;
-        }
-        console.log("✅ Git commit and push successful!");
-
-      }
-    );
+    try {
+      await new Promise((resolve, reject) => {
+        exec(
+          `git add ${POSTS_FILE_PATH} && git commit -m "${GIT_COMMIT_MESSAGE}" && git push origin main`,
+          (err, stdout, stderr) => {
+            if (err) {
+              console.error("❌ Git commit/push failed:", stderr);
+              reject(err);
+            } else {
+              console.log("✅ Git commit and push successful!");
+              resolve(stdout);
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("❌ Git commit/push process failed:", error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to commit and push posts.json" }),
+      };
+    }
 
     console.log("🎉 upload-media function completed!");
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Upload successful, posts.json updated, and Netlify build triggered!",
+        message: "Upload successful, posts.json updated, and committed to GitHub!",
         url: uploadResult.secure_url,
       }),
     };
   } catch (error) {
     console.error("🔥 Full error details:", error.stack || error);
     console.error("📜 Full error response:", error.response ? await error.response.text() : "No response data");
-    
+
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message || "Unknown server error" }),
