@@ -2,7 +2,16 @@ const { eleventyImageTransformPlugin } = require("@11ty/eleventy-img");
 
 module.exports = function(eleventyConfig) {
 
-  eleventyConfig.addPlugin(eleventyImageTransformPlugin);
+  eleventyConfig.addPlugin(eleventyImageTransformPlugin, {
+    // widths: [300, 900, "auto"],
+    // htmlOptions: {
+		// 	imgAttributes: {
+    //     sizes: "",
+		// 		loading: "lazy",
+		// 		decoding: "async"
+		// 	}
+		// }
+  });
 
   eleventyConfig.addPassthroughCopy("_src/css");
   eleventyConfig.addPassthroughCopy("_src/js");

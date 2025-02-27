@@ -55,3 +55,69 @@ document.querySelectorAll('.dialog-button').forEach((button) => {
     document.getElementById(button.dataset.dialogId).showModal();
   });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const dialog = document.querySelector("dialog");
+
+  if (!dialog) {
+    console.warn("⚠️ No dialog found on the page.");
+    return;
+  }
+
+  const scrollContainer = dialog.querySelector("dialog > div");
+
+  if (!scrollContainer) {
+    console.warn("⚠️ No scroll container found inside dialog.");
+    return;
+  }
+
+  const firstImage = scrollContainer.querySelector("img");
+
+  if (!firstImage) {
+    console.warn("⚠️ No image found inside scroll container.");
+    return;
+  }
+
+  const adjustScrollContainerWidth = () => {
+    const viewportWidth = window.innerWidth; // Viewport width
+    const viewportHeight = window.innerHeight; // Viewport height
+
+    // Calculate dialog's max dimensions
+    const dialogComputedStyle = getComputedStyle(dialog);
+    const dialogPadding = parseFloat(dialogComputedStyle.padding) || 0;
+    const dialogMaxWidth = viewportWidth - 2 * dialogPadding - 6; // 2em - 6px adjustment
+    const dialogMaxHeight = viewportHeight - 2 * dialogPadding - 6; // 2em - 6px adjustment
+
+    // Ensure firstImage has dimensions before calculations
+    if (!firstImage.naturalWidth || !firstImage.naturalHeight) {
+      console.warn("⚠️ Image dimensions are not available yet.");
+      return;
+    }
+
+    // Calculate the rendered width of the first image
+    const aspectRatio = firstImage.naturalWidth / firstImage.naturalHeight;
+    const renderedImageWidth = Math.min(
+      firstImage.naturalWidth,
+      dialogMaxHeight * aspectRatio,
+      dialogMaxWidth
+    );
+
+    // Account for subtle rounding or scrollbar discrepancies
+    const scrollbarWidth = scrollContainer.offsetWidth - scrollContainer.clientWidth;
+    const containerWidth = renderedImageWidth - scrollbarWidth;
+
+    // Apply the calculated width to the scroll container
+    scrollContainer.style.width = `${containerWidth}px`;
+  };
+
+  // Adjust width when the image is loaded
+  firstImage.onload = adjustScrollContainerWidth;
+
+  // Handle cached images
+  if (firstImage.complete) {
+    adjustScrollContainerWidth();
+  }
+
+  // Adjust width on window resize
+  window.addEventListener("resize", adjustScrollContainerWidth);
+});

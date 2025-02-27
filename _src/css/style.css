@@ -130,19 +130,30 @@ dialog {
   background-color: white;
   outline: none;
 }
-dialog :is(img, video) {
-  width: auto;
-  max-height: 90svh;
-}
 dialog > div {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  img, video {
-    max-height: calc(100svh - 5rem);
+  margin-inline: auto;
+  outline: 0;
+  picture {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    height: auto;    
   }
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 90svh;
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* img, video {
+    max-height: calc(100svh - 5rem);
+  } */
 }
 figure {
   position: relative;
@@ -213,7 +224,4 @@ footer {
 }
 dialog::backdrop {
   pointer-events: none;
-}
-picture {
-  flex-shrink: 0;
 }

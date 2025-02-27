@@ -20,7 +20,7 @@ eleventyComputed:
               </div>
               <video src="{{ url }}">
             {%- else -%}
-              <img src="{{ url | optimize('/c_scale,w_800/q_auto/f_auto') }}" alt="">
+              <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="300, 900" sizes="(max-width: 600px) 300px, 900px">
             {%- endif -%}
           </button>
         {%- endfor -%}
