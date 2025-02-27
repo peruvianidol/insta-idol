@@ -28,7 +28,8 @@ async function uploadImageToCloudinary(file) {
   isUploading = true;
 
   const formData = new FormData();
-  formData.append("file", file, "");
+  formData.append("file", file);
+  formData.append("filename_override", "");
   formData.append("upload_preset", "insta-idol");
   formData.append("folder", "insta-idol");
 
