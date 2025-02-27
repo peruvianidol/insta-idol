@@ -1,6 +1,12 @@
 const fs = require("fs");
 require("dotenv").config();
 
+// Ensure `_site/` directory exists before writing `_headers`
+const siteDir = "_site";
+if (!fs.existsSync(siteDir)) {
+  fs.mkdirSync(siteDir, { recursive: true });
+}
+
 const username = process.env.BASIC_AUTH_USERNAME;
 const password = process.env.BASIC_AUTH_PASSWORD;
 
@@ -14,6 +20,5 @@ const headersContent = headersTemplate
   .replace("${BASIC_AUTH_USERNAME}", username)
   .replace("${BASIC_AUTH_PASSWORD}", password);
 
-const headersPath = "_site/_headers"; 
-fs.writeFileSync(headersPath, headersContent);
+fs.writeFileSync(`${siteDir}/_headers`, headersContent);
 console.log("✅ _headers file generated successfully!");
