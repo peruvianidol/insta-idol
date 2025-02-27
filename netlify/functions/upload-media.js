@@ -119,18 +119,6 @@ exports.handler = async (event) => {
         }
         console.log("✅ Git commit and push successful!");
 
-        // 🚀 **Trigger Netlify Build After Git Push**
-        if (BUILD_HOOK_URL) {
-          console.log("🔄 Triggering Netlify build...");
-          try {
-            await fetch(BUILD_HOOK_URL, { method: "POST" });
-            console.log("✅ Netlify build triggered successfully!");
-          } catch (buildError) {
-            console.error("❌ Failed to trigger Netlify build:", buildError);
-          }
-        } else {
-          console.warn("⚠️ NETLIFY_BUILD_HOOK is not set in environment variables.");
-        }
       }
     );
 
