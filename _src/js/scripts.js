@@ -29,12 +29,13 @@ async function uploadImageToCloudinary(file) {
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("filename_override", "");
   formData.append("upload_preset", "insta-idol");
   formData.append("folder", "insta-idol");
 
+  // ✅ Fix: Only get caption if "title" input exists
+  const titleInput = document.getElementById("title");
+  const captionText = titleInput ? titleInput.value.trim() : "Untitled"; // Default to "Untitled" if missing
   const creationTimestamp = Math.floor(Date.now() / 1000);
-  const captionText = document.getElementById("title").value.trim(); // Ensure it's a string
   formData.append("context", `caption=${captionText}|creation_timestamp=${creationTimestamp}`);
 
   try {
@@ -59,49 +60,67 @@ async function uploadImageToCloudinary(file) {
 }
 
 // Handles form submission
-document.getElementById("uploadForm").addEventListener("submit", async function (e) {
-  e.preventDefault();
+const uploadForm = document.getElementById("uploadForm");
+if (uploadForm) {
+  uploadForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-  if (isSubmitting) {
-    console.warn("⚠️ Upload already in progress.");
-    return;
-  }
-
-  isSubmitting = true;
-
-  const title = document.getElementById("title").value;
-  const fileInput = document.getElementById("files");
-  const file = fileInput.files[0];
-
-  if (!title || !file) {
-    alert("❌ Please provide a title and select a file.");
-    isSubmitting = false;
-    return;
-  }
-
-  document.getElementById("uploadStatus").innerText = "Uploading image...";
-  
-  try {
-    const imageUrl = await uploadImageToCloudinary(file);
-
-    if (!imageUrl) {
-      throw new Error("Cloudinary upload failed.");
+    if (isSubmitting) {
+      console.warn("⚠️ Upload already in progress.");
+      return;
     }
 
-    document.getElementById("uploadStatus").innerText = "Updating site...";
+    isSubmitting = true;
 
-    const response = await fetch("/.netlify/functions/upload-media", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, file: imageUrl }),
+    const titleInput = document.getElementById("title");
+    const title = titleInput ? titleInput.value.trim() : "Untitled"; // Default if missing
+    const fileInput = document.getElementById("files");
+    const file = fileInput ? fileInput.files[0] : null;
+
+    if (!file) {
+      alert("❌ Please select a file.");
+      isSubmitting = false;
+      return;
+    }
+
+    document.getElementById("uploadStatus").innerText = "Uploading image...";
+    
+    try {
+      const imageUrl = await uploadImageToCloudinary(file);
+
+      if (!imageUrl) {
+        throw new Error("Cloudinary upload failed.");
+      }
+
+      document.getElementById("uploadStatus").innerText = "Updating site...";
+
+      const response = await fetch("/.netlify/functions/upload-media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, file: imageUrl }),
+      });
+
+      const result = await response.json();
+      document.getElementById("uploadStatus").innerText = result.message || "✅ Upload complete!";
+    } catch (error) {
+      document.getElementById("uploadStatus").innerText = "❌ Upload failed.";
+      console.error("❌ Error:", error);
+    }
+
+    isSubmitting = false;
+  });
+}
+
+// ✅ Fix: Only Attach Event Listeners If Dialog Buttons Exist
+const dialogButtons = document.querySelectorAll(".dialog-button");
+if (dialogButtons.length > 0) {
+  dialogButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const dialog = document.getElementById(button.dataset.dialogId);
+      if (dialog) {
+        dialog.showModal();
+      }
     });
-
-    const result = await response.json();
-    document.getElementById("uploadStatus").innerText = result.message || "✅ Upload complete!";
-  } catch (error) {
-    document.getElementById("uploadStatus").innerText = "❌ Upload failed.";
-    console.error("❌ Error:", error);
-  }
-
-  isSubmitting = false;
-});
+  });
+}
