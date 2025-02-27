@@ -8,8 +8,7 @@ package = "netlify-plugin-cache"
   functions = "netlify/functions"
 
 [[headers]]
-  for = "/*"
+  for = "/upload"
   [headers.values]
-    X-Debug-Test = "Netlify Is Reading Headers"
-
-
+    X-Debug-Username = "${BASIC_AUTH_USERNAME}"
+    X-Debug-Password = "${BASIC_AUTH_PASSWORD}"
