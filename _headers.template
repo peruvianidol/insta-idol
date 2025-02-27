@@ -1,2 +1,0 @@
-/upload
-  Basic-Auth: ${BASIC_AUTH_USERNAME}:${BASIC_AUTH_PASSWORD}
