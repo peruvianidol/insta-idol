@@ -69,7 +69,11 @@ async function uploadImageToCloudinary(file) {
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "insta-idol"); 
+  formData.append("upload_preset", "insta-idol");
+  formData.append("folder", "insta-idol"); // Ensure uploads go to correct folder
+
+  // ✅ Add metadata (title & timestamp)
+  formData.append("context", `title=${title}|creation_timestamp=${Math.floor(Date.now() / 1000)}`);
 
   try {
     const response = await fetch(
@@ -82,7 +86,7 @@ async function uploadImageToCloudinary(file) {
 
     const data = await response.json();
     if (!data.secure_url) {
-      throw new Error("Failed to upload image to Cloudinary.");
+      throw new Error("Cloudinary upload failed.");
     }
 
     console.log("✅ Image uploaded to Cloudinary:", data.secure_url);
@@ -131,14 +135,23 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
     document.getElementById("uploadStatus").innerText = "Uploading post data...";
 
     // ✅ Step 2: Send the Cloudinary URL to Netlify function
+    if (!imageUrl) {
+      console.error("❌ No image URL received from Cloudinary.");
+      document.getElementById("uploadStatus").innerText = "❌ Upload failed.";
+      return;
+    }
+    
+    document.getElementById("uploadStatus").innerText = "Uploading post data...";
+    
+    // ✅ Step 2: Send the Cloudinary URL to Netlify function
     const response = await fetch("/.netlify/functions/upload-media", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: title,
-        file: imageUrl, // Send URL instead of Base64
+        file: imageUrl,
       }),
-    });
+    });    
 
     const result = await response.json();
     document.getElementById("uploadStatus").innerText =

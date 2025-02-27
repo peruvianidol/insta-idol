@@ -151,6 +151,8 @@ exports.handler = async (event) => {
       errorMessage = error.message || "Unknown server error";
     }
     
+    console.error("📜 Error Message from API:", errorMessage);
+
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" }, // Ensure JSON response
