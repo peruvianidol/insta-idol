@@ -14,5 +14,6 @@ const headersContent = headersTemplate
   .replace("${BASIC_AUTH_USERNAME}", username)
   .replace("${BASIC_AUTH_PASSWORD}", password);
 
-fs.writeFileSync("_headers", headersContent);
+const headersPath = "_site/_headers"; 
+fs.writeFileSync(headersPath, headersContent);
 console.log("✅ _headers file generated successfully!");
