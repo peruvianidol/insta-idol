@@ -148,9 +148,9 @@ dialog > div {
     height: auto;
     max-height: 90svh;
   }
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     display: none;
-  }
+  } */
   /* img, video {
     max-height: calc(100svh - 5rem);
   } */
