@@ -20,7 +20,7 @@ eleventyComputed:
               </div>
               <video src="{{ url }}">
             {%- else -%}
-              <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="300, 900" sizes="(max-width: 600px) 300px, 900px">
+              <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
             {%- endif -%}
           </button>
         {%- endfor -%}
@@ -40,7 +40,7 @@ eleventyComputed:
           {%- if url.slice(-3) === "mp4" -%}
             <video src="{{ url | optimize('/q_auto/f_auto') }}" controls loop>
           {%- else -%}
-            <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="">
+            <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
           {% endif %}
         {%- endfor -%}
       </div>
