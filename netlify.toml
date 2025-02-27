@@ -11,3 +11,5 @@ package = "netlify-plugin-cache"
   for = "/upload"
   [headers.values]
     Basic-Auth = "${BASIC_AUTH_USERNAME}:${BASIC_AUTH_PASSWORD}"
+    X-Test-Header = "This should appear in the response"
+
