@@ -16,5 +16,3 @@ layout: base.njk
 </form>
 
 <div id="uploadStatus"></div>
-
-<script src="/js/scripts.js"></script>
