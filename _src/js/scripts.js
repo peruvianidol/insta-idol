@@ -72,12 +72,12 @@ if (uploadForm) {
     isSubmitting = true;
 
     const titleInput = document.getElementById("title");
-    const title = titleInput ? titleInput.value.trim() : "Untitled"; // Default if missing
+    const title = titleInput ? titleInput.value.trim() : ""; // Default if missing
     const fileInput = document.getElementById("files");
-    const file = fileInput ? fileInput.files[0] : null;
+    const files = fileInput ? Array.from(fileInput.files) : [];
 
-    if (!file) {
-      alert("❌ Please select a file.");
+    if (files.length === 0) {
+      alert("❌ Please select at least one file.");
       isSubmitting = false;
       return;
     }
@@ -85,10 +85,19 @@ if (uploadForm) {
     document.getElementById("uploadStatus").innerText = "Uploading image...";
     
     try {
-      const imageUrl = await uploadImageToCloudinary(file);
+      const uploadedImages = [];
 
-      if (!imageUrl) {
-        throw new Error("Cloudinary upload failed.");
+      for (const file of files) {
+        const imageUrl = await uploadImageToCloudinary(file);
+        if (imageUrl) {
+          uploadedImages.push(imageUrl);
+        } else {
+          console.warn(`⚠️ Upload failed for ${file.name}`);
+        }
+      }
+
+      if (uploadedImages.length === 0) {
+        throw new Error("Cloudinary upload failed for all files.");
       }
 
       document.getElementById("uploadStatus").innerText = "Updating site...";
@@ -96,7 +105,7 @@ if (uploadForm) {
       const response = await fetch("/.netlify/functions/upload-media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, file: imageUrl }),
+        body: JSON.stringify({ title, files: uploadedImages }),
       });
 
       const result = await response.json();
