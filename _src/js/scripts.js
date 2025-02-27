@@ -124,3 +124,19 @@ if (dialogButtons.length > 0) {
     });
   });
 }
+
+document.addEventListener("click", (event) => {
+  const openDialogs = Array.from(document.querySelectorAll("dialog[open]"));
+  for (const dialog of openDialogs) {
+    const rect = dialog.getBoundingClientRect();
+    const isInDialog =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom;
+
+    if (!isInDialog) {
+      dialog.close();
+    }
+  }
+});
