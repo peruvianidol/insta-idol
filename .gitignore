@@ -2,6 +2,6 @@ node_modules
 .DS_Store
 _site
 .cache
-# Local Netlify folder
 .netlify
 .env
+_headers

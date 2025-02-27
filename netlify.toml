@@ -6,3 +6,4 @@ package = "netlify-plugin-cache"
 
 [build]
   functions = "netlify/functions"
+  command = "node generate-headers.js && npm run build"
