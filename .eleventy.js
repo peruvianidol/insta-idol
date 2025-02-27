@@ -15,7 +15,6 @@ module.exports = function(eleventyConfig) {
 
   eleventyConfig.addPassthroughCopy("_src/css");
   eleventyConfig.addPassthroughCopy("_src/js");
-  eleventyConfig.addPassthroughCopy("_headers");
 
   eleventyConfig.addFilter("limit", function (arr, limit) {
     return arr.slice(0, limit);

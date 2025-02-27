@@ -1,2 +1,2 @@
 /upload/*
-  Basic-Auth: mike:test
+  Basic-Auth: ${BASIC_AUTH_USERNAME}:${BASIC_AUTH_PASSWORD}
