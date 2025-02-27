@@ -6,3 +6,8 @@ package = "netlify-plugin-cache"
 
 [build]
   functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["_src/_data/posts.json"]
+  max_body_size = "10mb"
