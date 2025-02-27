@@ -1,0 +1,8 @@
+[[plugins]]
+package = "netlify-plugin-cache"
+
+  [plugins.inputs]
+  paths = [ ".cache" ]
+
+[build]
+  functions = "netlify/functions"
