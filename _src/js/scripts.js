@@ -32,6 +32,14 @@ async function uploadImageToCloudinary(file) {
   formData.append("upload_preset", "insta-idol");
   formData.append("folder", "insta-idol");
 
+  // ✅ Force Cloudinary to generate a unique filename
+  formData.append("public_id", ""); // Empty public_id tells Cloudinary to ignore original filename
+
+  // ✅ Add metadata
+  const creationTimestamp = Math.floor(Date.now() / 1000);
+  formData.append("context", `caption=${title}|creation_timestamp=${creationTimestamp}`);
+
+
   try {
     const response = await fetch(
       "https://api.cloudinary.com/v1_1/insta-idol/image/upload",
