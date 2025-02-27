@@ -36,7 +36,6 @@ async function uploadImageToCloudinary(file) {
   const titleInput = document.getElementById("title");
   const captionText = titleInput ? titleInput.value.trim() : "Untitled"; // Default to "Untitled" if missing
   const creationTimestamp = Math.floor(Date.now() / 1000);
-  formData.append("context", `caption=${captionText}|creation_timestamp=${creationTimestamp}`);
 
   try {
     const response = await fetch(
