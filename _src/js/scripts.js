@@ -28,14 +28,13 @@ async function uploadImageToCloudinary(file) {
   isUploading = true;
 
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file, "");
   formData.append("upload_preset", "insta-idol");
   formData.append("folder", "insta-idol");
 
-  // ✅ Add metadata
   const creationTimestamp = Math.floor(Date.now() / 1000);
-  formData.append("context", `caption=${title}|creation_timestamp=${creationTimestamp}`);
-
+  const captionText = document.getElementById("title").value.trim(); // Ensure it's a string
+  formData.append("context", `caption=${captionText}|creation_timestamp=${creationTimestamp}`);
 
   try {
     const response = await fetch(
