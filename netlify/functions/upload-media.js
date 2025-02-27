@@ -3,10 +3,10 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const path = require("path");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-const { exec } = require("child_process"); // 🚀 Allows us to run Git commands
+const { exec } = require("child_process");
 
 const BUILD_HOOK_URL = process.env.NETLIFY_BUILD_HOOK;
-const GIT_COMMIT_MESSAGE = "Auto-update posts.json with new upload"; // Customize if needed
+const GIT_COMMIT_MESSAGE = "Auto-update posts.json with new upload";
 
 // Configure Cloudinary
 cloudinary.config({
@@ -27,6 +27,8 @@ exports.handler = async (event) => {
   }
 
   try {
+    console.log("🚀 upload-media function started!");
+
     const body = JSON.parse(event.body);
 
     if (!body.title || !body.file) {
@@ -39,25 +41,29 @@ exports.handler = async (event) => {
 
     console.log(`📸 Uploading file for title: ${body.title}`);
 
+    let fileData = body.file;
+
+    // Check if input is a URL or Base64
+    const isURL = fileData.startsWith("http");
+    const isBase64 = /^[A-Za-z0-9+/=]+$/.test(fileData) && !isURL;
+
+    if (isBase64) {
+      fileData = `data:image/jpeg;base64,${fileData}`; // Ensure proper Base64 format
+    }
+
+    console.log("📸 Uploading file to Cloudinary:", fileData.substring(0, 100)); // Log first 100 characters
+
+    const uploadResult = await cloudinary.uploader.upload(fileData, {
+      folder: "insta-idol/",
+      resource_type: "auto",
+    });
+
+    console.log("✅ Cloudinary upload complete:", uploadResult.secure_url);
+
     const creation_timestamp = Math.floor(Date.now() / 1000);
     const latitude = null; // Placeholder for EXIF data
     const longitude = null;
 
-    // Upload to Cloudinary
-    const uploadResult = await cloudinary.uploader.upload(`data:image/jpeg;base64,${body.file}`, {
-      folder: "insta-idol/",
-      resource_type: "auto",
-      context: {
-        caption: body.title,
-        creation_timestamp: creation_timestamp.toString(),
-        latitude: latitude ? latitude.toString() : "",
-        longitude: longitude ? longitude.toString() : "",
-      },
-    });
-
-    console.log(`✅ Upload successful: ${uploadResult.secure_url}`);
-
-    // Create new post object
     const newPost = {
       creation_timestamp,
       title: body.title,
@@ -105,7 +111,7 @@ exports.handler = async (event) => {
     // 🚀 **Commit & Push the Updated `posts.json` to GitHub**
     console.log("🔄 Committing and pushing posts.json to GitHub...");
     exec(
-      `git add ${POSTS_FILE_PATH} && git commit -m "${GIT_COMMIT_MESSAGE}" && git push`,
+      `git add ${POSTS_FILE_PATH} && git commit -m "${GIT_COMMIT_MESSAGE}" && git push origin main`,
       async (err, stdout, stderr) => {
         if (err) {
           console.error("❌ Git commit/push failed:", stderr);
@@ -113,7 +119,7 @@ exports.handler = async (event) => {
         }
         console.log("✅ Git commit and push successful!");
 
-        // 🚀 **Trigger Netlify Build**
+        // 🚀 **Trigger Netlify Build After Git Push**
         if (BUILD_HOOK_URL) {
           console.log("🔄 Triggering Netlify build...");
           try {
@@ -128,6 +134,8 @@ exports.handler = async (event) => {
       }
     );
 
+    console.log("🎉 upload-media function completed!");
+
     return {
       statusCode: 200,
       body: JSON.stringify({
@@ -136,10 +144,10 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error("🔥 Upload error:", error);
+    console.error("🔥 Full error details:", error.stack || error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message || "Server error" }),
+      body: JSON.stringify({ error: error.message || "Unknown server error" }),
     };
   }
 };
