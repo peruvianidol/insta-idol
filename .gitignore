@@ -4,4 +4,3 @@ _site
 .cache
 .netlify
 .env
-_headers
