@@ -142,12 +142,19 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error("🔥 Full error details:", error.stack || error);
-    console.error("📜 Full error response:", error.response ? await error.response.text() : "No response data");
+    console.error("🔥 Full error details:", error);
 
+    let errorMessage;
+    if (error.response) {
+      errorMessage = await error.response.text(); // Get Cloudinary or API failure reason
+    } else {
+      errorMessage = error.message || "Unknown server error";
+    }
+    
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message || "Unknown server error" }),
-    };
+      headers: { "Content-Type": "application/json" }, // Ensure JSON response
+      body: JSON.stringify({ error: errorMessage }),
+    };    
   }
 };

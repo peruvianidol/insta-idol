@@ -57,14 +57,23 @@ document.querySelectorAll(".dialog-button").forEach((button) => {
 });
 
 // Function to upload an image directly to Cloudinary and return the URL
+let isUploading = false; // Prevent duplicate uploads
+
 async function uploadImageToCloudinary(file) {
+  if (isUploading) {
+    console.warn("⚠️ Upload already in progress, skipping duplicate upload.");
+    return null;
+  }
+  
+  isUploading = true; // Mark upload as in progress
+  
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "insta-idol");
+  formData.append("upload_preset", "your_cloudinary_preset");
 
   try {
     const response = await fetch(
-      "https://api.cloudinary.com/v1_1/insta-idol/image/upload",
+      "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload",
       {
         method: "POST",
         body: formData,
@@ -77,16 +86,27 @@ async function uploadImageToCloudinary(file) {
     }
 
     console.log("✅ Image uploaded to Cloudinary:", data.secure_url);
+    isUploading = false; // Reset for next upload
     return data.secure_url;
   } catch (error) {
+    isUploading = false;
     console.error("❌ Cloudinary upload error:", error);
     throw error;
   }
 }
 
 // Modify the upload form to first upload to Cloudinary, then send the URL to Netlify
+let isSubmitting = false; // Prevent double submission
+
 document.getElementById("uploadForm").addEventListener("submit", async function (e) {
   e.preventDefault();
+
+  if (isSubmitting) {
+    console.warn("⚠️ Upload already in progress, skipping duplicate Netlify request.");
+    return;
+  }
+  
+  isSubmitting = true; // Mark form as submitting
 
   const title = document.getElementById("title").value;
   const fileInput = document.getElementById("files");
@@ -94,24 +114,23 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
 
   if (!title || !file) {
     alert("❌ Please provide a title and select a file.");
+    isSubmitting = false;
     return;
   }
 
   document.getElementById("uploadStatus").innerText = "Uploading image...";
 
   try {
-    // ✅ Step 1: Upload the image to Cloudinary
     const imageUrl = await uploadImageToCloudinary(file);
 
     document.getElementById("uploadStatus").innerText = "Uploading post data...";
 
-    // ✅ Step 2: Send the Cloudinary URL to Netlify
     const response = await fetch("/.netlify/functions/upload-media", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: title,
-        file: imageUrl, // ✅ Send the URL instead of a Base64 string
+        file: imageUrl,
       }),
     });
 
@@ -122,4 +141,6 @@ document.getElementById("uploadForm").addEventListener("submit", async function 
     document.getElementById("uploadStatus").innerText = "❌ Upload failed.";
     console.error("❌ Error:", error);
   }
+
+  isSubmitting = false; // Reset flag for next upload
 });
