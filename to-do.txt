@@ -20,15 +20,18 @@
 ✅ Use dialog to show full-size image when clicking on an image
 - Dark mode toggle
 ✅ Add Cloudinary image optimization, separate images for thumbnail/full-size
-- Subset logo font?
+❌ Subset logo font?
 ✅ Support multi-image posts
 ✅ Support/test video
 ✅ Persist grid/list view between pages 
 - Add RSS
 - Make a new video icon
-- Improve pagination beyond prev/next
+❌ Improve pagination beyond prev/next
 ✅ Stop video from playing when closing modal
 - Replace Instagram media with original quality media?
-- Make a SVG sprite for icons
+❌ Make a SVG sprite for icons
 - Add social sharing metadata
 - Add favicon
+- Clear upload form after uploading (flash message?)
+- Preview chosen files and choose order?
+- Reset scroll position of image-container when modal is closed

@@ -231,7 +231,6 @@ dialog:has(.image-container picture:nth-child(2)) .next {
   right: .5rem;
   width: 2rem;
   aspect-ratio: 1;
-  pointer-events: none;
   background-color: rgb(0 0 0 / .4);
   border-radius: 50%;
   display: grid;
@@ -294,6 +293,5 @@ footer {
   }
 }
 dialog::backdrop {
-  pointer-events: none;
   backdrop-filter: blur(25px);
 }
