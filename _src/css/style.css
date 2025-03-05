@@ -214,6 +214,7 @@ dialog .next {
 }
 dialog:has(.image-container picture:nth-child(2)) .prev,
 dialog:has(.image-container picture:nth-child(2)) .next {
+  z-index: 100;
   display: block;
 }
 @media (width < 760px) {
@@ -222,7 +223,7 @@ dialog:has(.image-container picture:nth-child(2)) .next {
     grid-template-columns: 1fr;
     .next {
       right: 1rem;
-    }
+    }  
   }
 }
 .icon-multiple,

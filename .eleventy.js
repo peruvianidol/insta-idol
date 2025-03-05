@@ -16,7 +16,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("_src/css");
   eleventyConfig.addPassthroughCopy("_src/js");
   eleventyConfig.addPassthroughCopy("_src/images");
-  
+
   eleventyConfig.addFilter("limit", function (arr, limit) {
     return arr.slice(0, limit);
   });
@@ -42,6 +42,10 @@ module.exports = function(eleventyConfig) {
     const beforeUpload = url.slice(0, insertPosition + uploadSegment.length);
     const afterUpload = url.slice(insertPosition + uploadSegment.length);
     return `${beforeUpload}${optimizations}${afterUpload}`;
+  });
+
+  eleventyConfig.setServerOptions({
+    showAllHosts: true,    
   });
 
   return {
