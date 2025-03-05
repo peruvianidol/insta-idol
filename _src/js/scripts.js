@@ -134,17 +134,43 @@ if (dialogButtons.length > 0) {
 }
 
 document.addEventListener("click", (event) => {
-  const openDialogs = Array.from(document.querySelectorAll("dialog[open]"));
+  const openDialogs = document.querySelectorAll("dialog[open]");
+
   for (const dialog of openDialogs) {
-    const rect = dialog.getBoundingClientRect();
-    const isInDialog =
+    const figure = dialog.querySelector("figure");
+
+    const rect = figure.getBoundingClientRect();
+    const isInFigure =
       event.clientX >= rect.left &&
       event.clientX <= rect.right &&
       event.clientY >= rect.top &&
       event.clientY <= rect.bottom;
 
-    if (!isInDialog) {
+    if (!isInFigure) {
       dialog.close();
     }
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("dialog").forEach((dialog) => {
+    const container = dialog.querySelector(".image-container");
+    const prevButton = dialog.querySelector(".prev");
+    const nextButton = dialog.querySelector(".next");
+
+    if (!container || !prevButton || !nextButton) {
+      console.error("❌ Missing elements inside dialog!");
+      return;
+    }
+
+    prevButton.addEventListener("click", () => {
+      console.log("⬅ Scrolling left...");
+      container.scrollBy({ left: -container.clientWidth, behavior: "smooth" });
+    });
+
+    nextButton.addEventListener("click", () => {
+      console.log("➡ Scrolling right...");
+      container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
+    });
+  });
 });

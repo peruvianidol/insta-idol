@@ -35,15 +35,23 @@ eleventyComputed:
       </figcaption>
     </figure>
     <dialog id="{{ post.creation_timestamp }}">
-      <div>
-        {%- for url in post.media -%}
-          {%- if url.slice(-3) === "mp4" -%}
-            <video src="{{ url | optimize('/q_auto/f_auto') }}" controls loop>
-          {%- else -%}
-            <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
-          {% endif %}
-        {%- endfor -%}
-      </div>
+      <figure>
+        <button class="prev" aria-label="Previous Image"></button>
+        <div class="image-container">
+          {%- for url in post.media -%}
+            {%- if url.slice(-3) === "mp4" -%}
+              <video src="{{ url | optimize('/q_auto/f_auto') }}" controls loop>
+            {%- else -%}
+              <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
+            {% endif %}
+          {%- endfor -%}
+        </div>
+        <button class="next" aria-label="Next Image"></button>
+        <figcaption>
+          <p><strong>peruviandiol</strong> {{ post.title }}</p>
+          <time datetime="{{ post.creation_timestamp }}">{{ post.creation_timestamp | postDate }}</time>
+        </figcaption>
+      </figure>
     </dialog>
   {%- endfor -%}
 </div>

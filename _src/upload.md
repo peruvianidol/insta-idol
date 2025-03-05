@@ -7,7 +7,7 @@ layout: base.njk
 
 <form id="uploadForm">
   <label for="title">Caption:</label>
-  <input type="text" id="title" name="title" required>
+  <input type="text" id="title" name="title">
   
   <label for="files">Upload Images/Videos:</label>
   <input type="file" id="files" name="files" multiple accept="image/*,video/*" required>

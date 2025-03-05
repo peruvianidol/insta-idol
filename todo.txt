@@ -12,8 +12,8 @@
  * Convert DMS to decimal degrees (DD)
  * Link to Google Maps location
 ✅ Add existing Instagram data to JSON
-- Upload form sends images to Cloudinary and updates JSON file
-- Send build hook to Netlify on upload
+✅ Upload form sends images to Cloudinary and updates JSON file
+✅ Send build hook to Netlify on upload
 - Use 11ty pagination to create individual image pages?
 - "share" link to individual posts
 ✅ Lazy load images OR Dogs of Dev-style pagination

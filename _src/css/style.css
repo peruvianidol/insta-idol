@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+NO&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -7,6 +8,8 @@
 body {
   padding: 1.5rem .5rem;
   font-family: sans-serif;
+  font-weight: 400;
+  color: #232323;
   max-width: 935px;
   margin-inline: auto;
   line-height: 1.375;
@@ -51,7 +54,7 @@ img, video {
       object-fit: cover;
     }
   }
-  figcaption {
+  > figure figcaption {
     display: none;
   }
 }
@@ -68,11 +71,15 @@ body:has([id="list"]:checked) .grid {
   }
   figcaption {
     display: block;
-    padding-block: .5rem;
-    time {
-      font-size: .875rem;
-      opacity: .6;
-    }
+  }
+}
+figcaption {
+  background-color: white;
+  padding-inline: 0;
+  padding-block: .5rem;
+  time {
+    font-size: .875rem;
+    opacity: .6;
   }
 }
 .icon-label {
@@ -122,41 +129,98 @@ strong {
   background-color: #000;
   opacity: 0.85;
 }
-dialog {
+dialog[open] {
   border: 0;
-  padding: 1rem;
-  margin-inline: auto;
-  margin-block: auto;
-  background-color: white;
-  outline: none;
-}
-dialog > div {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  margin-inline: auto;
-  outline: 0;
-  picture {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-    height: auto;    
-  }
-  img {
-    width: 100%;
-    height: auto;
-    max-height: 90svh;
-  }
-  /* &::-webkit-scrollbar {
-    display: none;
-  } */
-  /* img, video {
-    max-height: calc(100svh - 5rem);
-  } */
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  display: grid;
+  place-items: center;
+  background-color: transparent;
 }
 figure {
   position: relative;
+}
+dialog > figure {
+  display: grid;
+  margin-inline: 1.5rem;
+  grid-template-columns: auto 300px;
+  max-height: calc(100vh - 3rem);
+  max-width: calc(100vw - 3rem);
+  button {
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    width: 2rem;
+    aspect-ratio: 1;
+    text-align: center;
+    background-color: rgb(255 255 255 / .2);
+    border: 0;
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.10);
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+    background-position: center center;
+  }
+  .prev {
+    left: 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z' fill='rgb(0 0 0 / .8)'/%3E%3C/svg%3E");
+  }
+  .next {
+    right: calc(300px + 1rem);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath d='M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z' fill='rgb(0 0 0 / .8)'/%3E%3C/svg%3E");
+  }
+  div {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: clip;
+    align-items: center;
+    background-color: black;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    max-width: 100%;
+    scrollbar-width: none;
+    picture {
+      scroll-snap-align: start;
+      flex: 0 0 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      height: auto; 
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      height: auto; 
+    }
+  }
+  figcaption {
+    padding: 1rem;
+  }
+}
+dialog .prev,
+dialog .next {
+  display: none;
+}
+dialog:has(.image-container picture:nth-child(2)) .prev,
+dialog:has(.image-container picture:nth-child(2)) .next {
+  display: block;
+}
+@media (width < 760px) {
+  dialog > figure {
+    grid-template-columns: 1fr;
+    .next {
+      right: 1rem;
+    }
+  }
 }
 .icon-multiple,
 .video-icon {
@@ -189,6 +253,7 @@ figure {
   align-items: center;
   gap: .25rem;
   padding: .5rem 0;
+  font-size: .875rem;
   li {
     flex: 1;
   }
@@ -202,14 +267,15 @@ figure {
   a {
     display: inline-block;
     text-align: center;
-    border-radius: 4px;
+    border-radius: 2px;
     text-decoration: none;
     color: inherit;
-    line-height: 2rem;
+    line-height: 1.5rem;
     cursor: pointer;
-    padding: .25rem 1rem;
+    padding: .125rem .75rem;
+    border: 1px solid midnightblue;
     &:hover {
-      background-color: dodgerblue;
+      background-color: midnightblue;
       color: white;
     }
   }
@@ -217,11 +283,15 @@ figure {
 footer {
   text-align: center;
   font-size: .875rem;
-  opacity: .6;
+  opacity: .7;
   a {
     color: inherit;
+    &:hover {
+      color: midnightblue;
+    }
   }
 }
 dialog::backdrop {
   pointer-events: none;
+  backdrop-filter: blur(25px);
 }
