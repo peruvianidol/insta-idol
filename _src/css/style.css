@@ -140,6 +140,7 @@ dialog[open] {
   display: grid;
   place-items: center;
   background-color: transparent;
+  pointer-events: auto;
 }
 figure {
   position: relative;
@@ -294,4 +295,7 @@ footer {
 }
 dialog::backdrop {
   backdrop-filter: blur(25px);
+}
+.force-repaint {
+  transform: translateZ(0);
 }

@@ -29,9 +29,12 @@
 ❌ Make a SVG sprite for icons
 - Clear upload form after uploading (flash message?)
 - Preview chosen files and choose order?
-- Add social sharing metadata
-- Add favicon
-- Reset scroll position of image-container when modal is closed
 - Add RSS
 - Use 11ty pagination to create individual image pages?
 - "share" link to individual posts
+- Update CSS on upload form, use textarea for caption.
+- Add social sharing metadata
+- Add favicon
+- Reset scroll position of image-container when modal is closed
+- BUG: no video thumbnails in iOS
+- BUG: no left arrow button in iOS
