@@ -40,6 +40,7 @@ input, textarea, button {
 img, video {
   width: 100%;
   max-width: 100%;
+  max-height: 100%;
   height: auto;
   display: block;
 }
@@ -216,6 +217,7 @@ dialog:has(.image-container picture:nth-child(2)) .next {
 }
 @media (width < 760px) {
   dialog > figure {
+    max-height: 90svh;
     grid-template-columns: 1fr;
     .next {
       right: 1rem;
