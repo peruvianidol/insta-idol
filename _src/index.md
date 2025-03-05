@@ -40,7 +40,7 @@ eleventyComputed:
         <div class="image-container">
           {%- for url in post.media -%}
             {%- if url.slice(-3) === "mp4" -%}
-              <video src="{{ url | optimize('/q_auto/f_auto') }}" preloads="metadata" controls loop>
+              <video src="{{ url | optimize('/q_auto/f_auto') }}#t=0.001" preloads="metadata" controls loop>
             {%- else -%}
               <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
             {% endif %}
