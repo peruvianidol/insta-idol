@@ -174,3 +174,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+document.addEventListener("close", (event) => {
+  if (event.target.tagName === "DIALOG") {
+    const videos = event.target.querySelectorAll("video");
+    videos.forEach(video => {
+      video.pause();
+      video.currentTime = 0; // Reset video to start
+    });
+  }
+}, true);
