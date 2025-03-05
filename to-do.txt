@@ -36,5 +36,5 @@
 - Add social sharing metadata
 - Add favicon
 - Reset scroll position of image-container when modal is closed
-- BUG: no video thumbnails in iOS
+✅ BUG: no video thumbnails in iOS
 - BUG: no left arrow button in iOS
