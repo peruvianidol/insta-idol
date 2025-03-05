@@ -18,7 +18,7 @@ eleventyComputed:
               <div class="video-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 24 24"><path d="M23 7.061v9.878c0 .689-.56 1.249-1.248 1.249H2.248A1.25 1.25 0 0 1 1 16.938V7.062c0-.689.56-1.249 1.248-1.249h19.504c.689 0 1.248.56 1.248 1.25Zm-6.823 4.78-7.38-4.03a.2.2 0 0 0-.198.003.199.199 0 0 0-.1.172v8.029a.2.2 0 0 0 .295.176l7.383-3.998a.2.2 0 0 0 0-.351Z"/></svg>
               </div>
-              <video src="{{ url }}">
+              <video src="{{ url }}#t=0.001" preloads="metadata">
             {%- else -%}
               <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:widths="600, 1440" sizes="(max-width: 600px) 600px, 1440px">
             {%- endif -%}
