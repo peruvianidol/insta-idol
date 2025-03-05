@@ -164,12 +164,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     prevButton.addEventListener("click", () => {
-      console.log("⬅ Scrolling left...");
       container.scrollBy({ left: -container.clientWidth, behavior: "smooth" });
     });
 
     nextButton.addEventListener("click", () => {
-      console.log("➡ Scrolling right...");
       container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
     });
   });
