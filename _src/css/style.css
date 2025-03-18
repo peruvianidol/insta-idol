@@ -297,6 +297,3 @@ footer {
 dialog::backdrop {
   backdrop-filter: blur(25px);
 }
-.force-repaint {
-  transform: translateZ(0);
-}
