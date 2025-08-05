@@ -70,9 +70,9 @@ if (uploadForm) {
     }
 
     isSubmitting = true;
+    const statusDiv = document.getElementById("uploadStatus");
 
-    const titleInput = document.getElementById("title");
-    const title = titleInput ? titleInput.value.trim() : ""; // Default if missing
+    const title = document.getElementById("title")?.value.trim() || "";
     const fileInput = document.getElementById("files");
     const files = fileInput ? Array.from(fileInput.files) : [];
 
@@ -82,8 +82,15 @@ if (uploadForm) {
       return;
     }
 
-    document.getElementById("uploadStatus").innerText = "Uploading image...";
-    
+    // ✅ Determine creation timestamp
+    const dateInput = document.getElementById("date");
+    const takenDate = dateInput?.value;
+    const creationTimestamp = takenDate
+      ? Math.floor(new Date(`${takenDate}T00:00:00-06:00`).getTime() / 1000) // Local Central time
+      : Math.floor(Date.now() / 1000);
+
+    statusDiv.innerText = "Uploading image(s)...";
+
     try {
       const uploadedImages = [];
 
@@ -100,18 +107,27 @@ if (uploadForm) {
         throw new Error("Cloudinary upload failed for all files.");
       }
 
-      document.getElementById("uploadStatus").innerText = "Updating site...";
+      statusDiv.innerText = "Updating site...";
 
+      // ✅ Include creationTimestamp in the payload
       const response = await fetch("/.netlify/functions/upload-media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, files: uploadedImages }),
+        body: JSON.stringify({ 
+          title, 
+          files: uploadedImages, 
+          creationTimestamp 
+        }),
       });
 
       const result = await response.json();
-      document.getElementById("uploadStatus").innerText = result.message || "✅ Upload complete!";
+      statusDiv.innerText = result.message || "✅ Upload complete!";
+
+      // ✅ Clear form after success
+      uploadForm.reset();
+
     } catch (error) {
-      document.getElementById("uploadStatus").innerText = "❌ Upload failed.";
+      statusDiv.innerText = "❌ Upload failed.";
       console.error("❌ Error:", error);
     }
 
