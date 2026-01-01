@@ -186,7 +186,7 @@ dialog > figure {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     outline: 0;
-    max-width: 100%;
+    max-width: 600px;
     scrollbar-width: none;
     picture {
       scroll-snap-align: start;

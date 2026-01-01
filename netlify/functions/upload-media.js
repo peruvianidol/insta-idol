@@ -49,10 +49,13 @@ exports.handler = async (event) => {
     }
     
     const newPost = {
-      creation_timestamp: Math.floor(Date.now() / 1000),
+      creation_timestamp: body.creation_timestamp
+        ? Number(body.creation_timestamp)
+        : Math.floor(Date.now() / 1000),
       title: body.title,
-      media: body.files, // Store all uploaded images
+      media: body.files,
     };
+
     
     const success = await updateGitHubFile(newPost);
     if (!success) {
