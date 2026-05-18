@@ -9,7 +9,7 @@ eleventyExcludeFromCollections: true
     {
       "timestamp": {{ post.creation_timestamp }},
       "title": {{ post.title | jsonval }},
-      "url": "{{ site.url }}/posts/{{ post.media[0] | mediaId }}/",
+      "url": "{{ site.url }}/posts/{{ post | postSlug }}/",
       "thumbnail": "{{ post.media[0] | optimize('/w_600,q_auto,f_auto') }}"
     }{% if not loop.last %},{% endif %}
     {%- endfor -%}

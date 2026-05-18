@@ -5,7 +5,7 @@ pagination:
   data: posts
   size: 1
   alias: post
-permalink: "/posts/{{ post.media[0] | mediaId }}/"
+permalink: "/posts/{{ post | postSlug }}/"
 eleventyComputed:
   title: "{{ post.title if post.title else 'Post' }} | Insta-Idol"
 ---
@@ -16,7 +16,7 @@ eleventyComputed:
       {%- if url.slice(-3) === "mp4" -%}
         <video src="{{ url | optimize('/q_auto,f_auto') }}" controls loop playsinline></video>
       {%- else -%}
-        <img src="{{ url | optimize('/q_auto,f_auto') }}" alt="{{ post.title }}" eleventy:widths="600, 1200" sizes="(max-width: 600px) 600px, 1200px">
+        <img src="{{ url | optimize('/q_auto,f_auto') }}" alt="{{ post.alt or post.title }}" eleventy:ignore>
       {%- endif -%}
     {%- endfor -%}
   </div>

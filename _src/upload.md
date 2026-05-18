@@ -19,6 +19,10 @@ hideViewToggle: true
       <textarea id="title" name="title" rows="3" placeholder="Write a caption…"></textarea>
     </div>
     <div>
+      <label for="alt">Alt text</label>
+      <textarea id="alt" name="alt" rows="2" placeholder="Describe the image for screen readers…"></textarea>
+    </div>
+    <div>
       <label for="date">Date taken (optional)</label>
       <input type="date" id="date" name="date">
     </div>

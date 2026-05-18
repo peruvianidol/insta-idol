@@ -141,6 +141,7 @@ if (uploadForm) {
     statusDiv.className = "upload-status";
 
     const title = document.getElementById("title")?.value.trim() || "";
+    const alt = document.getElementById("alt")?.value.trim() || "";
     const dateInput = document.getElementById("date");
     const creationTimestamp = dateInput?.value
       ? Math.floor(new Date(`${dateInput.value}T00:00:00-06:00`).getTime() / 1000)
@@ -157,7 +158,7 @@ if (uploadForm) {
       const response = await fetch("/.netlify/functions/upload-media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, files: urls, creationTimestamp }),
+        body: JSON.stringify({ title, alt, files: urls, creationTimestamp }),
       });
       const result = await response.json();
 

@@ -44,17 +44,18 @@ exports.handler = async (event) => {
     console.log("🚀 upload-media function started!");
 
     const body = JSON.parse(event.body);
-    if (!body.title || !body.files || !Array.isArray(body.files) || body.files.length === 0) {
-      return { statusCode: 400, body: JSON.stringify({ error: "Missing title or files data" }) };
+    if (!body.files || !Array.isArray(body.files) || body.files.length === 0) {
+      return { statusCode: 400, body: JSON.stringify({ error: "Missing files data" }) };
     }
-    
+
     const newPost = {
       creation_timestamp: body.creation_timestamp
         ? Number(body.creation_timestamp)
         : Math.floor(Date.now() / 1000),
-      title: body.title,
+      title: body.title || "",
       media: body.files,
     };
+    if (body.alt) newPost.alt = body.alt;
 
     
     const success = await updateGitHubFile(newPost);

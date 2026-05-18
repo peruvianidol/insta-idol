@@ -21,6 +21,24 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter("jsonval", (value) => {
     return new nunjucks.runtime.SafeString(JSON.stringify(value));
   });
+  eleventyConfig.addFilter("timestampToRfc3339", (timestamp) => {
+    return new Date(timestamp * 1000).toISOString();
+  });
+  eleventyConfig.addFilter("postSlug", (post) => {
+    const date = new Date(post.creation_timestamp * 1000);
+    const dateStr = date.toISOString().slice(0, 10);
+    const titleSlug = (post.title || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 60)
+      .replace(/-$/, "");
+    const idMatch = (post.media[0] || "").match(/\/([^/]+)\.\w+$/);
+    const suffix = idMatch ? idMatch[1].slice(-4) : "";
+    const base = titleSlug ? `${dateStr}-${titleSlug}` : dateStr;
+    return suffix ? `${base}-${suffix}` : base;
+  });
   eleventyConfig.addFilter("mediaId", (url) => {
     if (!url) return null;
     const match = url.match(/\/([^/]+)\.\w+$/);

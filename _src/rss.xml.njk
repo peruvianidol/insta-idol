@@ -1,0 +1,25 @@
+---
+permalink: /rss.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ site.title }}</title>
+  <subtitle>{{ site.description }}</subtitle>
+  <link href="{{ site.url }}/rss.xml" rel="self"/>
+  <link href="{{ site.url }}/"/>
+  <updated>{{ posts[0].creation_timestamp | timestampToRfc3339 }}</updated>
+  <id>{{ site.url }}/</id>
+  <author>
+    <name>Mike Aparicio</name>
+  </author>
+  {%- for post in posts | limit(20) -%}
+  <entry>
+    <title>{{ post.title if post.title else "Post" }}</title>
+    <link href="{{ site.url }}/posts/{{ post | postSlug }}/"/>
+    <id>{{ site.url }}/posts/{{ post | postSlug }}/</id>
+    <updated>{{ post.creation_timestamp | timestampToRfc3339 }}</updated>
+    <content type="html"><![CDATA[<img src="{{ post.media[0] | optimize('/w_1200,q_auto,f_auto') }}" alt="{{ post.title }}">{% if post.media.length > 1 %} <p>{{ post.media.length }} photos</p>{% endif %}]]></content>
+  </entry>
+  {%- endfor -%}
+</feed>
