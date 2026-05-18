@@ -14,189 +14,170 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Prevent duplicate uploads
-let isUploading = false;
-let isSubmitting = false;
+// Upload page
+const uploadForm = document.getElementById("uploadForm");
+if (uploadForm) {
+  let isSubmitting = false;
+  let uploadFiles = [];
 
-// Uploads image to Cloudinary and returns the URL
-async function uploadImageToCloudinary(file) {
-  if (isUploading) {
-    console.warn("⚠️ Upload already in progress, skipping duplicate upload.");
-    return null;
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("files");
+  const previewList = document.getElementById("previewList");
+  const statusDiv = document.getElementById("uploadStatus");
+
+  fileInput.addEventListener("change", (e) => {
+    addFiles(Array.from(e.target.files));
+    fileInput.value = "";
+  });
+
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("dragover");
+  });
+  dropZone.addEventListener("dragleave", (e) => {
+    if (!dropZone.contains(e.relatedTarget)) {
+      dropZone.classList.remove("dragover");
+    }
+  });
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+    const files = Array.from(e.dataTransfer.files).filter(
+      (f) => f.type.startsWith("image/") || f.type.startsWith("video/")
+    );
+    addFiles(files);
+  });
+
+  function addFiles(files) {
+    files.forEach((file) => {
+      uploadFiles.push(file);
+      renderPreview(file, uploadFiles.length - 1);
+    });
   }
 
-  isUploading = true;
+  function renderPreview(file, index) {
+    const item = document.createElement("div");
+    item.className = "preview-item";
+    item.draggable = true;
+    item.dataset.index = index;
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "insta-idol");
-  formData.append("folder", "insta-idol");
+    const media = file.type.startsWith("video/")
+      ? document.createElement("video")
+      : document.createElement("img");
+    media.src = URL.createObjectURL(file);
+    if (media.tagName === "VIDEO") {
+      media.muted = true;
+      media.preload = "metadata";
+    }
+    item.appendChild(media);
 
-  // ✅ Fix: Only get caption if "title" input exists
-  const titleInput = document.getElementById("title");
-  const captionText = titleInput ? titleInput.value.trim() : "Untitled"; // Default to "Untitled" if missing
-  const creationTimestamp = Math.floor(Date.now() / 1000);
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "preview-remove";
+    removeBtn.setAttribute("aria-label", "Remove");
+    removeBtn.textContent = "×";
+    removeBtn.addEventListener("click", () => {
+      uploadFiles.splice(uploadFiles.indexOf(file), 1);
+      rebuildPreviews();
+    });
+    item.appendChild(removeBtn);
 
-  try {
+    item.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", String(index));
+      item.classList.add("dragging");
+    });
+    item.addEventListener("dragend", () => item.classList.remove("dragging"));
+    item.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      item.classList.add("drag-over");
+    });
+    item.addEventListener("dragleave", () => item.classList.remove("drag-over"));
+    item.addEventListener("drop", (e) => {
+      e.preventDefault();
+      item.classList.remove("drag-over");
+      const from = parseInt(e.dataTransfer.getData("text/plain"));
+      const to = parseInt(item.dataset.index);
+      if (from !== to) {
+        const moved = uploadFiles.splice(from, 1)[0];
+        uploadFiles.splice(to, 0, moved);
+        rebuildPreviews();
+      }
+    });
+
+    previewList.appendChild(item);
+  }
+
+  function rebuildPreviews() {
+    previewList.innerHTML = "";
+    uploadFiles.forEach((file, i) => renderPreview(file, i));
+  }
+
+  async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "insta-idol");
+    formData.append("folder", "insta-idol");
     const response = await fetch(
       "https://api.cloudinary.com/v1_1/insta-idol/image/upload",
       { method: "POST", body: formData }
     );
-
     const data = await response.json();
-    if (!data.secure_url) {
-      throw new Error("Cloudinary upload failed.");
-    }
-
-    console.log("✅ Image uploaded to Cloudinary:", data.secure_url);
-    isUploading = false;
+    if (!data.secure_url) throw new Error("Cloudinary upload failed.");
     return data.secure_url;
-  } catch (error) {
-    isUploading = false;
-    console.error("❌ Cloudinary upload error:", error);
-    throw error;
   }
-}
 
-// Handles form submission
-const uploadForm = document.getElementById("uploadForm");
-if (uploadForm) {
-  uploadForm.addEventListener("submit", async function (e) {
+  uploadForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    if (isSubmitting) {
-      console.warn("⚠️ Upload already in progress.");
+    if (isSubmitting) return;
+    if (uploadFiles.length === 0) {
+      statusDiv.textContent = "Please select at least one file.";
+      statusDiv.className = "upload-status upload-status--error";
       return;
     }
 
     isSubmitting = true;
-    const statusDiv = document.getElementById("uploadStatus");
+    const submitBtn = uploadForm.querySelector("[type=submit]");
+    submitBtn.disabled = true;
+    statusDiv.className = "upload-status";
 
     const title = document.getElementById("title")?.value.trim() || "";
-    const fileInput = document.getElementById("files");
-    const files = fileInput ? Array.from(fileInput.files) : [];
-
-    if (files.length === 0) {
-      alert("❌ Please select at least one file.");
-      isSubmitting = false;
-      return;
-    }
-
-    // ✅ Determine creation timestamp
     const dateInput = document.getElementById("date");
-    const takenDate = dateInput?.value;
-    const creationTimestamp = takenDate
-      ? Math.floor(new Date(`${takenDate}T00:00:00-06:00`).getTime() / 1000) // Local Central time
+    const creationTimestamp = dateInput?.value
+      ? Math.floor(new Date(`${dateInput.value}T00:00:00-06:00`).getTime() / 1000)
       : Math.floor(Date.now() / 1000);
 
-    statusDiv.innerText = "Uploading image(s)...";
-
     try {
-      const uploadedImages = [];
-
-      for (const file of files) {
-        const imageUrl = await uploadImageToCloudinary(file);
-        if (imageUrl) {
-          uploadedImages.push(imageUrl);
-        } else {
-          console.warn(`⚠️ Upload failed for ${file.name}`);
-        }
+      const urls = [];
+      for (let i = 0; i < uploadFiles.length; i++) {
+        statusDiv.textContent = `Uploading file ${i + 1} of ${uploadFiles.length}…`;
+        urls.push(await uploadToCloudinary(uploadFiles[i]));
       }
 
-      if (uploadedImages.length === 0) {
-        throw new Error("Cloudinary upload failed for all files.");
-      }
-
-      statusDiv.innerText = "Updating site...";
-
-      // ✅ Include creationTimestamp in the payload
+      statusDiv.textContent = "Saving post…";
       const response = await fetch("/.netlify/functions/upload-media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          title, 
-          files: uploadedImages, 
-          creationTimestamp 
-        }),
+        body: JSON.stringify({ title, files: urls, creationTimestamp }),
       });
-
       const result = await response.json();
-      statusDiv.innerText = result.message || "✅ Upload complete!";
 
-      // ✅ Clear form after success
-      uploadForm.reset();
-
-    } catch (error) {
-      statusDiv.innerText = "❌ Upload failed.";
-      console.error("❌ Error:", error);
+      if (response.ok) {
+        statusDiv.textContent = "Posted!";
+        statusDiv.className = "upload-status upload-status--success";
+        uploadForm.reset();
+        uploadFiles = [];
+        previewList.innerHTML = "";
+      } else {
+        throw new Error(result.message || "Server error");
+      }
+    } catch (err) {
+      statusDiv.textContent = "Upload failed. Please try again.";
+      statusDiv.className = "upload-status upload-status--error";
+      console.error(err);
     }
 
     isSubmitting = false;
+    submitBtn.disabled = false;
   });
 }
 
-// ✅ Fix: Only Attach Event Listeners If Dialog Buttons Exist
-const dialogButtons = document.querySelectorAll(".dialog-button");
-if (dialogButtons.length > 0) {
-  dialogButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const dialog = document.getElementById(button.dataset.dialogId);
-      if (dialog) {
-        dialog.showModal();
-      }
-    });
-  });
-}
-
-document.addEventListener("click", (event) => {
-  const openDialogs = document.querySelectorAll("dialog[open]");
-
-  for (const dialog of openDialogs) {
-    const figure = dialog.querySelector("figure");
-
-    const rect = figure.getBoundingClientRect();
-    const isInFigure =
-      event.clientX >= rect.left &&
-      event.clientX <= rect.right &&
-      event.clientY >= rect.top &&
-      event.clientY <= rect.bottom;
-
-    if (!isInFigure) {
-      dialog.close();
-    }
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("dialog").forEach((dialog) => {
-    const container = dialog.querySelector(".image-container");
-    const prevButton = dialog.querySelector(".prev");
-    const nextButton = dialog.querySelector(".next");
-
-    if (!container || !prevButton || !nextButton) {
-      console.error("❌ Missing elements inside dialog!");
-      return;
-    }
-
-    prevButton.addEventListener("click", () => {
-      container.scrollBy({ left: -container.clientWidth, behavior: "smooth" });
-    });
-
-    nextButton.addEventListener("click", () => {
-      container.scrollBy({ left: container.clientWidth, behavior: "smooth" });
-    });
-  });
-});
-
-document.addEventListener("close", (event) => {
-  if (event.target.tagName === "DIALOG") {
-    // Stop and reset videos
-    const videos = event.target.querySelectorAll("video");
-    videos.forEach(video => {
-      video.pause();
-      video.currentTime = 0;
-    });
-        
-  }
-}, true);

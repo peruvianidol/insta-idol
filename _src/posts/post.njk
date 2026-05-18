@@ -1,0 +1,37 @@
+---
+layout: base.njk
+hideViewToggle: true
+pagination:
+  data: posts
+  size: 1
+  alias: post
+permalink: "/posts/{{ post.media[0] | mediaId }}/"
+eleventyComputed:
+  title: "{{ post.title if post.title else 'Post' }} | Insta-Idol"
+---
+
+<article class="post flow">
+  <div class="post-media">
+    {%- for url in post.media -%}
+      {%- if url.slice(-3) === "mp4" -%}
+        <video src="{{ url | optimize('/q_auto,f_auto') }}" controls loop playsinline></video>
+      {%- else -%}
+        <img src="{{ url | optimize('/q_auto,f_auto') }}" alt="{{ post.title }}" eleventy:widths="600, 1200" sizes="(max-width: 600px) 600px, 1200px">
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  <div class="post-caption">
+    {%- if post.title -%}
+      <p><strong>peruviandiol</strong> {{ post.title }}</p>
+    {%- endif -%}
+    <time datetime="{{ post.creation_timestamp }}">{{ post.creation_timestamp | postDate }}</time>
+  </div>
+</article>
+
+<nav class="pagination">
+  <ol>
+    <li>{% if pagination.href.previous %}<a href="{{ pagination.href.previous }}">Newer</a>{% endif %}</li>
+    <li><a href="/">All posts</a></li>
+    <li>{% if pagination.href.next %}<a href="{{ pagination.href.next }}">Older</a>{% endif %}</li>
+  </ol>
+</nav>

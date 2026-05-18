@@ -1,4 +1,5 @@
 const { eleventyImageTransformPlugin } = require("@11ty/eleventy-img");
+const nunjucks = require("nunjucks");
 
 module.exports = function(eleventyConfig) {
 
@@ -17,6 +18,14 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("_src/js");
   eleventyConfig.addPassthroughCopy("_src/images");
 
+  eleventyConfig.addFilter("jsonval", (value) => {
+    return new nunjucks.runtime.SafeString(JSON.stringify(value));
+  });
+  eleventyConfig.addFilter("mediaId", (url) => {
+    if (!url) return null;
+    const match = url.match(/\/([^/]+)\.\w+$/);
+    return match ? match[1] : null;
+  });
   eleventyConfig.addFilter("limit", function (arr, limit) {
     return arr.slice(0, limit);
   });

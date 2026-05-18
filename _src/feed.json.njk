@@ -1,0 +1,17 @@
+---
+permalink: /feed.json
+eleventyExcludeFromCollections: true
+---
+{%- set feedPosts = posts | limit(20) -%}
+{
+  "posts": [
+    {%- for post in feedPosts -%}
+    {
+      "timestamp": {{ post.creation_timestamp }},
+      "title": {{ post.title | jsonval }},
+      "url": "{{ site.url }}/posts/{{ post.media[0] | mediaId }}/",
+      "thumbnail": "{{ post.media[0] | optimize('/w_600,q_auto,f_auto') }}"
+    }{% if not loop.last %},{% endif %}
+    {%- endfor -%}
+  ]
+}
