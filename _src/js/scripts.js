@@ -117,6 +117,8 @@ if (uploadForm) {
     formData.append("file", file);
     formData.append("upload_preset", "insta-idol");
     formData.append("folder", "insta-idol");
+    const basename = file.name.replace(/\.[^/.]+$/, "");
+    formData.append("public_id", `${basename}_${Date.now()}`);
     const response = await fetch(
       "https://api.cloudinary.com/v1_1/insta-idol/image/upload",
       { method: "POST", body: formData }

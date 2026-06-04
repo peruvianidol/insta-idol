@@ -11,6 +11,7 @@ eleventyComputed:
 
 <div class="grid">
   {%- for post in posts | limit(12) -%}
+    {%- set isFirstPost = loop.first -%}
     <figure>
       {%- for url in post.media | limit(1) -%}
         <a class="grid-link" href="/posts/{{ post | postSlug }}/">
@@ -20,7 +21,7 @@ eleventyComputed:
             </div>
             <video src="{{ url }}#t=0.001" preloads="metadata">
           {%- else -%}
-            <img src="{{ url | optimize('/q_auto/f_auto') }}" alt="" eleventy:ignore>
+            <img src="{{ url | optimize('/w_800,q_auto,f_auto') }}" alt="" eleventy:ignore{% if not isFirstPost %} loading="lazy"{% endif %}>
           {%- endif -%}
         </a>
       {%- endfor -%}

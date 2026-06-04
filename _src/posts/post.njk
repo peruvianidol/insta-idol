@@ -14,9 +14,9 @@ eleventyComputed:
   <div class="post-media">
     {%- for url in post.media -%}
       {%- if url.slice(-3) === "mp4" -%}
-        <video src="{{ url | optimize('/q_auto,f_auto') }}" controls loop playsinline></video>
+        <video src="{{ url | optimize('/w_1200,q_auto,f_auto') }}" controls loop playsinline preload="none"></video>
       {%- else -%}
-        <img src="{{ url | optimize('/q_auto,f_auto') }}" alt="{{ post.alt or post.title }}" eleventy:ignore>
+        <img src="{{ url | optimize('/w_1200,q_auto,f_auto') }}" alt="{{ post.alt or post.title }}" eleventy:ignore{% if loop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %}>
       {%- endif -%}
     {%- endfor -%}
   </div>
