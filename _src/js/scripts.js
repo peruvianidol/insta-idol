@@ -112,12 +112,23 @@ if (uploadForm) {
     uploadFiles.forEach((file, i) => renderPreview(file, i));
   }
 
+  async function readExifDate(file) {
+    try {
+      const { default: exifr } = await import("https://unpkg.com/exifr@7.1.3/dist/lite.esm.js");
+      const data = await exifr.parse(file, ["DateTimeOriginal"]);
+      if (!data?.DateTimeOriginal) return null;
+      const ts = Math.floor(new Date(data.DateTimeOriginal).getTime() / 1000);
+      return isNaN(ts) ? null : ts;
+    } catch {
+      return null;
+    }
+  }
+
   async function uploadToCloudinary(file) {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "insta-idol");
     formData.append("folder", "insta-idol");
-    formData.append("image_metadata", "true");
     const basename = file.name.replace(/\.[^/.]+$/, "");
     formData.append("public_id", `${basename}_${Date.now()}`);
     const response = await fetch(
@@ -126,16 +137,7 @@ if (uploadForm) {
     );
     const data = await response.json();
     if (!data.secure_url) throw new Error(data.error?.message || "Cloudinary upload failed.");
-
-    let exifTimestamp = null;
-    const exifDate = data.image_metadata?.DateTimeOriginal;
-    if (exifDate) {
-      const iso = exifDate.replace(/^(\d{4}):(\d{2}):(\d{2})/, "$1-$2-$3");
-      const ts = Math.floor(new Date(iso).getTime() / 1000);
-      if (!isNaN(ts)) exifTimestamp = ts;
-    }
-
-    return { url: data.secure_url, exifTimestamp };
+    return data.secure_url;
   }
 
   uploadForm.addEventListener("submit", async (e) => {
@@ -157,14 +159,14 @@ if (uploadForm) {
     const dateInput = document.getElementById("date");
 
     try {
-      const uploads = [];
+      statusDiv.textContent = "Reading photo metadata…";
+      const exifTimestamp = await readExifDate(uploadFiles[0]);
+
+      const urls = [];
       for (let i = 0; i < uploadFiles.length; i++) {
         statusDiv.textContent = `Uploading file ${i + 1} of ${uploadFiles.length}…`;
-        uploads.push(await uploadToCloudinary(uploadFiles[i]));
+        urls.push(await uploadToCloudinary(uploadFiles[i]));
       }
-
-      const urls = uploads.map(u => u.url);
-      const exifTimestamp = uploads[0]?.exifTimestamp ?? null;
       const creation_timestamp = dateInput?.value
         ? Math.floor(new Date(`${dateInput.value}T00:00:00-06:00`).getTime() / 1000)
         : exifTimestamp ?? Math.floor(Date.now() / 1000);
