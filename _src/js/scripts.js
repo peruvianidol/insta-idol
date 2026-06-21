@@ -125,7 +125,7 @@ if (uploadForm) {
       { method: "POST", body: formData }
     );
     const data = await response.json();
-    if (!data.secure_url) throw new Error("Cloudinary upload failed.");
+    if (!data.secure_url) throw new Error(data.error?.message || "Cloudinary upload failed.");
 
     let exifTimestamp = null;
     const exifDate = data.image_metadata?.DateTimeOriginal;
@@ -184,10 +184,10 @@ if (uploadForm) {
         uploadFiles = [];
         previewList.innerHTML = "";
       } else {
-        throw new Error(result.message || "Server error");
+        throw new Error(result.error || result.message || "Server error");
       }
     } catch (err) {
-      statusDiv.textContent = "Upload failed. Please try again.";
+      statusDiv.textContent = `Upload failed: ${err.message}`;
       statusDiv.className = "upload-status upload-status--error";
       console.error(err);
     }
