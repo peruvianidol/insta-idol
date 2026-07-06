@@ -112,6 +112,33 @@ if (uploadForm) {
     uploadFiles.forEach((file, i) => renderPreview(file, i));
   }
 
+  async function compressImage(file) {
+    if (!file.type.startsWith("image/")) return file;
+    const MAX_SIDE = 2048;
+    const QUALITY = 0.85;
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width <= MAX_SIDE && height <= MAX_SIDE) { resolve(file); return; }
+        if (width > height) { height = Math.round(height * MAX_SIDE / width); width = MAX_SIDE; }
+        else { width = Math.round(width * MAX_SIDE / height); height = MAX_SIDE; }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => resolve(new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: "image/jpeg" })),
+          "image/jpeg", QUALITY
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+
   async function readExifDate(file) {
     try {
       const { default: exifr } = await import("https://unpkg.com/exifr@7.1.3/dist/lite.esm.js");
@@ -164,8 +191,10 @@ if (uploadForm) {
 
       const urls = [];
       for (let i = 0; i < uploadFiles.length; i++) {
+        statusDiv.textContent = `Compressing file ${i + 1} of ${uploadFiles.length}…`;
+        const compressed = await compressImage(uploadFiles[i]);
         statusDiv.textContent = `Uploading file ${i + 1} of ${uploadFiles.length}…`;
-        urls.push(await uploadToCloudinary(uploadFiles[i]));
+        urls.push(await uploadToCloudinary(compressed));
       }
       const creation_timestamp = dateInput?.value
         ? Math.floor(new Date(`${dateInput.value}T00:00:00-06:00`).getTime() / 1000)
