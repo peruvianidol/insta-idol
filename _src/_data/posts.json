@@ -1,6 +1,14 @@
 [
   {
     "creation_timestamp": 1786341600,
+    "title": "Puppers",
+    "media": [
+      "https://res.cloudinary.com/insta-idol/image/upload/v1787536298/insta-idol/IMG_2708_1787536298144.jpg"
+    ],
+    "alt": "Emily, a gray miniature labradoodle with a mega-derpy tongue, and Mario, a white boxer, laying on a bed."
+  },
+  {
+    "creation_timestamp": 1786341600,
     "title": "Chicago Children’s Museum at Navy Pier",
     "media": [
       "https://res.cloudinary.com/insta-idol/image/upload/v1787536182/insta-idol/IMG_2700_1787536182279.jpg",
